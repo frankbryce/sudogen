@@ -1,2 +1,2 @@
-# hello-app
-Basic Flask app with Python. Want to use it as a starting point for other python web apps where I want visual output for some experiment or another.
+# Sudoku Generator
+This is a module that I made to generate sudoku puzzles based on a lego sudoku board I made my children to play with. The idea is that I will generate these puzzles, print them out into a starting position, and a solution, and put together booklets for them to work on. This will allow them to make their own puzzles, check their own answers, and I don't have to be there to help them after I teach them how to perform these tasks themselves.
