@@ -2,6 +2,7 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 import json
 import numpy as np
+import sudoku
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'TODO - wtf is this?'
@@ -25,11 +26,12 @@ def jsEnc(data):
 def index():
     return render_template('index.html')
 
-@socketio.on('random')
-def onrandom(width, height):
-    print('send random')
+@socketio.on('grid')
+def onrandom(difficulty):
+    grid = sudoku.Grid.New(difficulty)
     emit('json', {
-        'random_array': jsEnc(np.random.randint(2, size=(width,height))),
+        'start': jsEnc([[grid.cells[r][c].val for c in range(9)] for r in range(9)]),
+        'solution': jsEnc(grid.solution),
     })
 
 @socketio.on('connect')

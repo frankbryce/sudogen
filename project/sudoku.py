@@ -65,7 +65,7 @@ class Grid:
                             num not in cell.Col()):
                             cell.val = num
                             break
-        ret.solved = [[ret.cells[r][c].val for c in range(9)] for r in range(9)]
+        ret.solution = [[ret.cells[r][c].val for c in range(9)] for r in range(9)]
         return ret
 
     def From(ints: list[list[int]]) -> Grid:
