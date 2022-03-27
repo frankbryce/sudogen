@@ -141,12 +141,19 @@ class Grid:
                 cell = ret.cells[rc[0]][rc[1]]
                 if cell.row != rc[0] or cell.col != rc[1]:
                     print("Houston, we have a problem")
+
                 if cell.val == 0:
                     continue
 
                 # check that this location can be logicked back in
                 if not ret.Logickable(cell):
                     continue
+
+                # support "infinite" difficulty. Remove anything that can be removed.
+                if difficulty == -1:
+                    cell.val = 0
+                    success = True
+                    break
 
                 orig_val = cell.val
                 cell.val = 0
