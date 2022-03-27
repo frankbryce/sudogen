@@ -39,7 +39,7 @@ function AddCirc(sel,r,x,y,f,b) {
 }
 
 DARK_GREY = '#666'
-LIGHT_GREY = '#ccc'
+LIGHT_GREY = '#bbb'
 BOX_BG = '#222'
 
 // grid frame
@@ -125,4 +125,4 @@ socket.on('json', function(data) {
 function getGrid(difficulty) {
     socket.emit('grid', difficulty);
 }
-getGrid(2);
+getGrid(10);
