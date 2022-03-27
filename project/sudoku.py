@@ -40,16 +40,19 @@ class Grid:
     def __init__(self) -> Grid:
         self.cells = [[Cell(grid=self, row=row, col=col) for col in range(9)] for row in range(9)]
 
-    def Row(self, row) -> list[int]:
+    def Row(self: Grid, row: int) -> list[int]:
         return [self.cells[row][i] for i in range(9)]
 
-    def Col(self, col) -> list[int]:
+    def Col(self: Grid, col: int) -> list[int]:
         return [self.cells[i][col] for i in range(9)]
 
-    def Box(self, box) -> list[int]:
+    def Box(self: Grid, box: int) -> list[int]:
         rst = (box//3)*3
         cst = (box%3)*3
         return [self.cells[rst+r][cst+c] for r in range(3) for c in range(3)]
+
+    def Cell(self: Grid, row: int, col: int) -> Cell:
+        return self.cells[row][col]
 
     @staticmethod
     def Full() -> Grid:
@@ -68,6 +71,7 @@ class Grid:
         ret.solution = [[ret.cells[r][c].val for c in range(9)] for r in range(9)]
         return ret
 
+    @staticmethod
     def From(ints: list[list[int]]) -> Grid:
         ret = Grid()
         ret.cells = [
@@ -75,6 +79,47 @@ class Grid:
             for row in range(9)
         ]
         return ret
+
+    def Logickable(self: Grid, cell: Cell) -> bool:
+        if cell.val == 0:
+            print("Houston, you've called a problem")
+            return False
+
+        # only place for num in Row, Col or Box?
+        for loc in [self.Row(cell.row), self.Col(cell.col), self.Box(cell.box)]:
+            found = False
+            for _cell in loc:
+                if _cell.row == cell.row and _cell.col == cell.col:
+                    continue
+                if _cell.val != 0:
+                    continue
+                can_be_here = True
+                for _other_cell in (self.Row(_cell.row)+self.Col(_cell.col)+self.Box(_cell.box)):
+                    if _other_cell.row == cell.row and _other_cell.col == cell.col:
+                        continue
+                    if _other_cell.val == cell.val:
+                        can_be_here = False
+                        break
+                if can_be_here:
+                    found = True
+                    break
+            if not found:
+                return True
+
+        # only num for Cell?
+        sees = set()
+        for _cell in (self.Row(cell.row)+self.Col(cell.col)+self.Box(cell.box)):
+            if _cell is cell:
+                continue
+            sees.add(_cell.val)
+        sees.discard(0)
+        if cell.val in sees:
+            print("We have a problem, Houston")
+        if len(sees) == 8:
+            return True
+
+        return False
+
 
     @staticmethod
     def New(difficulty: int, nsims: int=10) -> Grid:
@@ -92,42 +137,7 @@ class Grid:
                     continue
 
                 # check that this location can be logicked back in
-                logickable = False
-                # only place for num in Row, Col or Box?
-                for loc in [ret.Row(cell.row), ret.Col(cell.col), ret.Box(cell.box)]:
-                    found = False
-                    for _cell in loc:
-                        if _cell is cell:
-                            continue
-                        can_be_here = True
-                        for _other_cell in (ret.Row(_cell.row)+ret.Col(_cell.col)+ret.Box(_cell.box)):
-                            if _other_cell is _cell:
-                                continue
-                            if _other_cell.val == cell.val:
-                                can_be_here = False
-                                break
-                        if can_be_here:
-                            found = True
-                            break
-                    if not found:
-                        logickable = True
-                        break
-
-                # only num for Cell?
-                if not logickable: # yet
-                    sees = set()
-                    for _cell in (ret.Row(cell.row)+ret.Col(cell.col)+ret.Box(cell.box)):
-                        if _cell is cell:
-                            continue
-                        sees.add(_cell.val)
-                    sees.discard(0)
-                    if cell.val in sees:
-                        print("We have a problem, Houston")
-                    if len(sees) == 8:
-                        logickable = True
-
-                # we are removing a cell we can't logic back
-                if not logickable:
+                if not ret.Logickable(cell):
                     continue
 
                 orig_val = cell.val
@@ -191,7 +201,7 @@ class Grid:
                     success = True
                     break
                 else:
-                    print("added value back")
+                    # print("added value back")
                     cell.val = orig_val
         return ret
         

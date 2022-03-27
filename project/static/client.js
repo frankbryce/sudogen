@@ -85,6 +85,7 @@ AddBox(17,17);
 function updateGrid(grid) {
     console.log(grid[0]);
     brick_colors = ['white', LIGHT_GREY, DARK_GREY, 'black', 'red', 'yellow', 'green', 'blue', 'plum'];
+    // brick_colors = ['white', 'red', 'yellow', 'orange', 'lightgreen', 'blue', 'magenta', 'maroon', 'pink'];
     for (let r=0;r<9;r++) {
         for (let c=0;c<9;c++) {
             console.log(grid[r][c]);
@@ -122,4 +123,4 @@ socket.on('json', function(data) {
 function getGrid(difficulty) {
     socket.emit('grid', difficulty);
 }
-getGrid(1);
+getGrid(9);
