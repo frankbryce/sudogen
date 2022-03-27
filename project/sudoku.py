@@ -19,7 +19,7 @@ class Cell:
         self.grid = grid
         self.row = row
         self.col = col
-        self.box = (row//3) + 3*(col//3)
+        self.box = 3*(row//3) + (col//3)
         self.val = val
 
     def Box(self) -> list[int]:
@@ -80,6 +80,14 @@ class Grid:
         ]
         return ret
 
+    def Count(self: Grid) -> int:
+        cnt = 0
+        for row in self.cells:
+            for cell in row:
+                if cell.val != 0:
+                    cnt += 1
+        return cnt
+
     def Logickable(self: Grid, cell: Cell) -> bool:
         if cell.val == 0:
             print("Houston, you've called a problem")
@@ -109,12 +117,12 @@ class Grid:
         # only num for Cell?
         sees = set()
         for _cell in (self.Row(cell.row)+self.Col(cell.col)+self.Box(cell.box)):
-            if _cell is cell:
+            if _cell.row == cell.row and _cell.col == cell.col:
                 continue
             sees.add(_cell.val)
         sees.discard(0)
         if cell.val in sees:
-            print("We have a problem, Houston")
+            print(f"We have a problem, Houston")
         if len(sees) == 8:
             return True
 
@@ -148,7 +156,7 @@ class Grid:
                     isim += 1
                     tries = 0
                     cell_added = False
-                    while not cell_added and tries<2*difficulty:
+                    while not cell_added and tries<=2*difficulty:
                         tries += 1
                         tot_tries += 1
                         if random.choice([1,2]) == 1:
@@ -191,7 +199,7 @@ class Grid:
                                 if _cell.val != 0:
                                     continue
                                 if _cell.val == num:
-                                    print("Houston, we have a problem")
+                                    print("Houston, we have a problemo")
                                 if (num not in _cell.Row() and
                                     num not in _cell.Col() and
                                     num not in _cell.Box()):

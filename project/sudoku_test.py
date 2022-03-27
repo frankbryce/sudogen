@@ -68,6 +68,17 @@ class TestSudokuMethods(unittest.TestCase):
             [0,0,0,1,1,1,2,2,2])
 
     @parameterized.expand([
+        ["box0_r0_c2", 0, 0, 2],
+        ["box1_r0_c4", 1, 0, 4],
+        ["box5_r4_c7", 5, 4, 7],
+        ["box8_r7_c8", 8, 7, 8],
+        ["box5_r5_c8", 5, 5, 8],
+    ])
+    def testBoxIdx(self, name, box, r, c):
+        cell = sudoku.Grid().Cell(r,c)
+        self.assertEqual(cell.box, box)
+
+    @parameterized.expand([
         ['test01', True, [[1,2,3,4,5,6,7,8,9,],
                           [0,0,0,0,0,0,0,0,0,],
                           [0,0,0,0,0,0,0,0,0,],

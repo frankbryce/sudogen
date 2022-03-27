@@ -84,12 +84,13 @@ AddBox(17,17);
 
 function updateGrid(grid) {
     console.log(grid[0]);
+    digit_count = 0;
     brick_colors = ['white', LIGHT_GREY, DARK_GREY, 'black', 'red', 'yellow', 'green', 'blue', 'plum'];
-    // brick_colors = ['white', 'red', 'yellow', 'orange', 'lightgreen', 'blue', 'magenta', 'maroon', 'pink'];
     for (let r=0;r<9;r++) {
         for (let c=0;c<9;c++) {
             console.log(grid[r][c]);
             if (grid[r][c] == 0) { continue; }
+	    digit_count += 1;
             x = 2*c+1;
             y = 2*r+1;
             if (r>=3) { y += 2; }
@@ -105,6 +106,7 @@ function updateGrid(grid) {
             AddCirc(gridSelect,0.25,x+1.5,y+1.5,color,bcolor);
         }
     }
+    console.log("updated grid with " + digit_count + " digits");
 }
 
 socket.on('json', function(data) {
@@ -123,4 +125,4 @@ socket.on('json', function(data) {
 function getGrid(difficulty) {
     socket.emit('grid', difficulty);
 }
-getGrid(9);
+getGrid(2);

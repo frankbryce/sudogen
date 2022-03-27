@@ -21,7 +21,6 @@ class NpEncoder(json.JSONEncoder):
 def jsEnc(data):
     return json.dumps(data, cls=NpEncoder)
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -32,6 +31,7 @@ def onrandom(difficulty):
     emit('json', {
         'start': jsEnc([[grid.cells[r][c].val for c in range(9)] for r in range(9)]),
         'solution': jsEnc(grid.solution),
+        'difficulty': difficulty,
     })
 
 @socketio.on('connect')
