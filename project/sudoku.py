@@ -135,7 +135,8 @@ class Grid:
         success = True
         rclist = [(r,c) for r in range(9) for c in range(9)]
         while success:
-            success = False
+            success = True
+
             random.shuffle(rclist)
             for rc in list(rclist):
                 cell = ret.cells[rc[0]][rc[1]]
@@ -147,77 +148,10 @@ class Grid:
 
                 # check that this location can be logicked back in
                 if not ret.Logickable(cell):
+                    success = False
                     continue
 
-                # support "infinite" difficulty. Remove anything that can be removed.
-                if difficulty == -1:
-                    cell.val = 0
-                    success = True
-                    break
-
-                orig_val = cell.val
                 cell.val = 0
-                tot_tries = 0
-                isim = 0
-                while isim<nsims and tot_tries <= nsims*difficulty:
-                    isim += 1
-                    tries = 0
-                    cell_added = False
-                    while not cell_added and tries<=2*difficulty:
-                        tries += 1
-                        tot_tries += 1
-                        if random.choice([1,2]) == 1:
-                            good_choice = False
-                            while not good_choice:
-                                idx = random.choice(list(range(9)))
-                                loc = random.choice([ret.Row, ret.Col, ret.Box])
-                                for _cell in loc(idx):
-                                    if _cell.val == 0:
-                                        good_choice = True
-                                        break
-                            for _cell in loc(idx):
-                                if _cell.val == 0:
-                                    vals = set(nums)
-                                    for v in _cell.Row():
-                                        vals.discard(v)
-                                    for v in _cell.Col():
-                                        vals.discard(v)
-                                    for v in _cell.Box():
-                                        vals.discard(v)
-                                    if len(vals) == 1:
-                                        cell_added = True
-                                        break
-                        else:
-                            good_choice = False
-                            while not good_choice:
-                                rc = random.choice(rclist)
-                                num = ret.cells[rc[0]][rc[1]].val
-                                if num == 0:
-                                    continue
-                                loc = random.choice([ret.Row, ret.Col, ret.Box])
-                                idx = random.choice(list(range(9)))
-                                good_choice = True
-                                for _cell in loc(idx):
-                                    if _cell.val == num:
-                                        good_choice = False
-                                        break
-                            num_pos = 0
-                            for _cell in loc(idx):
-                                if _cell.val != 0:
-                                    continue
-                                if _cell.val == num:
-                                    print("Houston, we have a problemo")
-                                if (num not in _cell.Row() and
-                                    num not in _cell.Col() and
-                                    num not in _cell.Box()):
-                                    num_pos += 1
-                            cell_added = (num_pos == 1)
-                if tot_tries <= nsims*difficulty:
-                    success = True
-                    break
-                else:
-                    # print("added value back")
-                    cell.val = orig_val
         return ret
         
     def Print(self):
